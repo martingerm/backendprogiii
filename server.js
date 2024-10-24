@@ -1,7 +1,6 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./db'); // Importa la conexión de la base de datos
+const connectDB = require('./db'); // Importa la función directamente
 const clientRoutes = require('./routes/clientRoutes');
 
 const app = express();
@@ -13,8 +12,12 @@ app.use(express.json());
 app.use('/api/clients', clientRoutes);
 
 // Conectar a la base de datos y arrancar el servidor
-connectDB();
-
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Servidor escuchando en http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('No se pudo conectar a la base de datos:', error);
+  });
